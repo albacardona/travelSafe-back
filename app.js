@@ -40,12 +40,6 @@ app.use(cookieParser());
 
 
 // Express View engine setup
-app.use(require('node-sass-middleware')({
-  src:  path.join(__dirname, 'public'),
-  dest: path.join(__dirname, 'public'),
-  sourceMap: true
-}));
-
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 app.use(express.static(path.join(__dirname, 'public')));
@@ -69,19 +63,26 @@ passport.deserializeUser((id, callback) => {
 
 
 //LOCALSTRATEGY MIDDLEWARE
-passport.use(new LocalStrategy({ passReqToCallback: true }, (req, username, password, next) => {
-  User.findOne({ username })
-    .then(user => {
-      if (!user) {
-        return next(null, false, { message: 'Wrong username'})
-      }
-      if (!bcrypt.compareSync(password, user.password)) {
-        return next(null, false, { message: 'Wrong password' })
-      }
-      return next(null, user)
-    })
-    .catch(err => next(err))
-}))
+passport.use(
+  new LocalStrategy({ 
+    passReqToCallback: true,
+    usernameField: 'email',
+    passwordField: 'password'
+  }, 
+  (req, email, password, next) => {
+    User.findOne({ email })
+      .then(user => {
+        if (!user) {
+          return next(null, false, { message: 'Wrong email'})
+        }
+        if (!bcrypt.compareSync(password, user.password)) {
+          return next(null, false, { message: 'Wrong password' })
+        }
+        return next(null, user)
+      })
+      .catch(err => next(err))
+  }
+))
 
 //PASSPORT MIDDLEWARE
 app.use(passport.initialize());
@@ -95,7 +96,7 @@ app.locals.title = 'TRAVELsafe new backend';
 const index = require('./routes/index');
 app.use('/', index);
 
-const authRoutes = require('./routes/auth-routes');
+const authRoutes = require('./routes/auth.routes');
 app.use('/', authRoutes);
 
 

@@ -7,19 +7,24 @@ const User = require('../models/User')
 
 authRoutes.post('/signup', (req, res, next) => {
 
-  const username = req.body.username;
-  const password = req.body.password;
+  const {
+    name,
+    lastName,
+    password,
+    email,
+    city
+  } = req.body;
 
-  if (!username || !password) {
+  if (!name || !lastName || !password || !email || !city) {
     res.json({ message: 'Please, fill all the fields.' }).status(400);
     return;
   }
 
-  if (password.length < 5) {
+  if (password.length < 6) {
     res.status(400).json({ message: 'Weak password.'})
   }
 
-  User.findOne({ username }, (err, foundUser) => {
+  User.findOne({ email }, (err, foundUser) => {
 
     if (err) {
       res.status(500).json({ message: 'Username check error.'});
@@ -35,8 +40,11 @@ authRoutes.post('/signup', (req, res, next) => {
     const hashPass = bcrypt.hashSync(password, salt);
 
     const aNewUser = new User({
-      username: username,
-      password: hashPass
+      name,
+      lastName,
+      email,
+      password: hashPass,
+      city
     });
 
     aNewUser.save(err => {
