@@ -1,46 +1,35 @@
-// const session       = require('express-session')
-// const bcrypt        = require('bcryptjs')
-// const passport      = require('passport')
-// const LocalStrategy = require('passport-local').Strategy
+const User = require('../models/User');
+const LocalStrategy = require('passport-local').Strategy;
+const bcrypt = require('bcryptjs');
+const passport = require('passport');
 
-// const User = require('../models/User')
+//USER PASSPORT MIDDLEWARES
+passport.serializeUser((user, callback) => {
+	callback(null, user._id);
+});
 
-// module.exports = app => {
-  
-//   //SESSION MIDDLEWARE
-//   app.use(session({
-//     secret: 'your-secret',
-//     resave: true,
-//     saveUninitialized: true
-//   }))
+passport.deserializeUser((id, callback) => {
+	User.findById(id).then((user) => callback(null, user)).catch((err) => callback(err));
+});
 
-//   //USER PASSPORT MIDDLEWARES
-//   passport.serializeUser((user, callback) => {
-//     callback(null, user._id);
-//   });
-
-//   passport.deserializeUser((id, callback) => {
-//     User.findById(id).then((user) => callback(null, user)).catch((err) => callback(err));
-//   });
-
-
-//   //LOCALSTRATEGY MIDDLEWARE
-//   passport.use(new LocalStrategy({ passReqToCallback: true }, (req, username, password, next) => {
-//     User.findOne({ username })
-//       .then(user => {
-//         if (!user) {
-//           return next(null, false, { message: 'Wrong username'})
-//         }
-//         if (!bcrypt.compareSync(password, user.password)) {
-//           return next(null, false, { message: 'Wrong password' })
-//         }
-//         return next(null, user)
-//       })
-//       .catch(err => next(err))
-//   }))
-
-
-//   //PASSPORT MIDDLEWARE
-//   app.use(passport.initialize())
-//   app.use(passport.session)
-// }
+//LOCALSTRATEGY MIDDLEWARE
+passport.use(
+  new LocalStrategy({ 
+    passReqToCallback: true,
+    usernameField: 'email',
+    passwordField: 'password'
+  }, 
+  (req, email, password, next) => {
+    User.findOne({ email })
+      .then(user => {
+        if (!user) {
+          return next(null, false, { message: 'Wrong email'})
+        }
+        if (!bcrypt.compareSync(password, user.password)) {
+          return next(null, false, { message: 'Wrong password' })
+        }
+        return next(null, user)
+      })
+      .catch(err => next(err))
+  }
+))
