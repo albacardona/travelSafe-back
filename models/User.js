@@ -16,7 +16,8 @@ const userSchema = new Schema({
   wishVisit: {type: [String], default: []},
   alreadyVisited: {type: [String], default: []},
   comments: {type: [String], default: []}
-}, {
+}, 
+{
   timestamps: true,
   toJSON: {
     transform: (doc, ret) => {
