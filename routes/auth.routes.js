@@ -44,7 +44,8 @@ authRoutes.post('/signup', (req, res, next) => {
       lastName,
       email,
       password: hashPass,
-      city
+      city,
+      alreadyVisited: [city]
     });
 
     aNewUser.save(err => {
