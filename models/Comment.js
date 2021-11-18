@@ -5,10 +5,11 @@ const commentSchema = new Schema({
   title: {type: String, required: true},
   comment: {type: String, required: true},
   rating: {type: Number, required: true},
-  userID: {type: Schema.Types.ObjectId},
+  userID: {type: String},
   name: {type: String},
   lastName: {type: String},
-  city: {type: String}
+  city: {type: String},
+  date: {type: Date, default: Date.now()}
 }, {
   timestamps: true,
   toJSON: {
