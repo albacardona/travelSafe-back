@@ -14,8 +14,7 @@ const userSchema = new Schema({
   },
   city: {type: String, required: true},
   wishVisit: {type: [String], default: []},
-  alreadyVisited: {type: [String], default: []},
-  comments: {type: [String], default: []}
+  alreadyVisited: {type: [String], default: []}
 }, 
 {
   timestamps: true,
