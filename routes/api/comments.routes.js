@@ -18,7 +18,7 @@ router.get('/:id', (req, res, next) => {
     .catch(err => res.status(500).json(err))
 });
 
-//! GET SINGLE COMMENTS BY USER ID
+//! GET ALL COMMENTS BY USER ID
 router.get('/user/:id', (req, res, next) => {
   const { id } = req.params
   Comment.find({ user: id })
@@ -74,6 +74,14 @@ router.put('/:id', (req, res, next) => {
       res.status(200).json(comment)
     }) 
     .catch(err => res.status(500).json(err))
+});
+
+//! DELETE COMMENT ROUTE
+router.delete('/:id', (req, res, next) => {
+  const { id } = req.params
+  Comment.findByIdAndDelete({ _id: id })
+   .then(() => res.status(200).json({ message: `Your comment ${id} has been deleted successfully 🗑.` }))
+   .catch(() => res.status(500).json({ message: 'Something went wrong. Please, try to delete your comment again.' }))
 })
 
 module.exports = router;
