@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 
 const Comment = require('../../models/Comment');
-const User = require('../../models/User');
 
 //! GET ALL COMMENTS ROUTE
 router.get('/', (req, res, next) => {
@@ -22,7 +21,7 @@ router.get('/:id', (req, res, next) => {
 //! GET SINGLE COMMENTS BY USER ID
 router.get('/user/:id', (req, res, next) => {
   const { id } = req.params
-  Comment.find({ userID: id })
+  Comment.find({ user: id })
     .then(comment => res.status(200).json(comment))
     .catch(err => res.status(500).json(err))
 });
@@ -40,9 +39,7 @@ router.post('/:city', (req, res, next) => {
     title,
     comment,
     rating,
-    userID,
-    name,
-    lastName
+    user
   } = req.body
 
   const city = req.params.city
@@ -56,17 +53,27 @@ router.post('/:city', (req, res, next) => {
     comment,
     rating,
     city,
-    userID,
-    name,
-    lastName
+    user
   });
 
   newComment.save()
     .then((comment) => {
       res.status(200).json(comment)
-      console.log(req.user)
     }) 
     .catch(err => res.status(500).json(err))
 });
+
+//! PUT ROUTE UPDATE COMMENT
+router.put('/:id', (req, res, next) => {
+  const { id } = req.params
+  Comment.findByIdAndUpdate({ _id: id }, req.body, { new: true })
+    .then(comment => {
+      if(!comment) {
+        return res.status(404).json({ message: "Not found "})
+      }
+      res.status(200).json(comment)
+    }) 
+    .catch(err => res.status(500).json(err))
+})
 
 module.exports = router;

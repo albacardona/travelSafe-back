@@ -5,10 +5,8 @@ const commentSchema = new Schema({
   title: {type: String, required: true},
   comment: {type: String, required: true},
   rating: {type: Number, required: true},
-  userID: {type: String},
-  name: {type: String},
-  lastName: {type: String},
   city: {type: String},
+  user: {type: Schema.Types.ObjectId, ref: 'User'},
   date: {type: Date, default: Date.now()}
 }, {
   timestamps: true,
