@@ -50,7 +50,10 @@ exports.createComment = (req, res, next) => {
 
   newComment.save()
     .then((comment) => {
-      res.status(200).json(comment)
+      res.status(201).json({
+        message: 'Comment successfully created!',
+        comment
+      })
     }) 
     .catch(err => res.status(500).json(err))
 };
@@ -60,9 +63,12 @@ exports.editComment = (req, res, next) => {
   Comment.findByIdAndUpdate({ _id: id }, req.body, { new: true })
     .then(comment => {
       if(!comment) {
-        return res.status(404).json({ message: "Not found "})
+        return res.status(404).json({ message: "Not found"})
       }
-      res.status(200).json(comment)
+      res.status(200).json({
+        message: 'Comment successfully updated!',
+        comment
+      })
     }) 
     .catch(err => res.status(500).json(err))
 };

@@ -58,7 +58,10 @@ exports.signup = (req, res, next) => {
           return;
         }
 
-        res.status(200).json(aNewUser);
+        res.status(201).json({
+          message: 'User successfully registered!',
+          user: aNewUser 
+        });
       });
     });
   });
