@@ -2,7 +2,6 @@ require('dotenv').config();
 
 const cookieParser  = require('cookie-parser');
 const express       = require('express');
-const favicon       = require('serve-favicon');
 const logger        = require('morgan');
 const path          = require('path');
 const passport      = require('passport');
@@ -14,25 +13,27 @@ require('./configs/db.config');
 require('./configs/passport.config');
 
 const app_name = require('./package.json').name;
-const debug = require('debug')(`${app_name}:${path.basename(__filename).split('.')[0]}`);
+// const debug = require('debug')(`${app_name}:${path.basename(__filename).split('.')[0]}`);
 
 const app = express();
 
 // Middleware Setup
 app.use(logger('dev'));
-app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 app.use(cookieParser());
 
 app.use(cors);
+
+// app.use(cors({
+//   credentials: true,
+//   origin: ["http://localhost:3001"]
+// }));
 
 // Enable authentication using session + passport
 app.use(session)
 app.use(passport.initialize());
 app.use(passport.session());
-
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.ico')));
 
 //LOCAL TITLE
 app.locals.title = 'TRAVELsafe new backend';
