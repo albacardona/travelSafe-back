@@ -85,7 +85,11 @@ exports.login = (req, res, next) => {
         return;
       }
 
-      res.status(200).json(theUser);
+      res.status(200).json({
+        message: 'User successfully logged in.',
+        user: theUser.name,
+        mail: theUser.email
+      });
     });
   })(req, res, next);
 };
@@ -93,7 +97,10 @@ exports.login = (req, res, next) => {
 exports.logout = (req, res, next) => {
   req.logout();
 
-  res.status(200).json({ message: 'Log out success!' })
+  res.status(200).json({
+    message: 'Log out success!',
+    user: req.body.email
+  })
 };
 
 exports.loggedin = (req, res) => {
@@ -101,5 +108,5 @@ exports.loggedin = (req, res) => {
       res.status(200).json(req.user);
       return;
   }
-  res.json({ });
+  res.json();
 };
