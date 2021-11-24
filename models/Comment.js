@@ -6,8 +6,7 @@ const commentSchema = new Schema({
   comment: {type: String, required: true},
   rating: {type: Number, required: true},
   city: {type: String},
-  user: {type: Schema.Types.ObjectId, ref: 'User'},
-  date: {type: Date, default: Date.now()}
+  user: {type: Schema.Types.ObjectId, ref: 'User'}
 }, {
   timestamps: true,
   toJSON: {
@@ -15,7 +14,6 @@ const commentSchema = new Schema({
       ret.id = doc._id;
       delete ret._id;
       delete ret.__v;
-      delete ret.createdAt;
       return ret;
     }
   }
