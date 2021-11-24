@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 mongoose
-.connect(`mongodb://localhost/${process.env.DBNAME}`, 
+.connect(`${process.env.DBURL}`, 
 {
   useNewUrlParser: true,
   useUnifiedTopology: true,
